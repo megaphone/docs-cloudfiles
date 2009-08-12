@@ -1,0 +1,1590 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cloud Files™ Developer Guide &mdash; Cloud Files Developer Guide v1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Cloud Files Developer Guide v1.1.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="">Cloud Files Developer Guide v1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="cloud-files-developer-guide">
+<h1>Cloud Files™ Developer Guide<a class="headerlink" href="#cloud-files-developer-guide" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+</ul>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The Rackspace Cloud Files™ is an affordable, redundant, scalable, and
+dynamic storage service offering.  The core storage system is designed to
+provide a safe, secure, automatically re-sizing and network accessible way
+to store data.  You can store an unlimited quantity of files and each file
+can be as large as 5 gigabytes. Users can store as much as they want and
+pay only for storage space they actually use.</p>
+<p>Additionally, Cloud Files provides a simple yet powerful way to publish
+and distribute content behind the industry leading Limelight Networks&#8217;
+Content Distribution Network. Cloud Files users get access to this
+network automatically without having to worry about contracts, additional
+costs, or technical hurdles.</p>
+<p>Cloud Files allows users to store/retrieve files and CDN-enable content
+via a simple Web Service (ReST: Representational State Transfer)
+interface. There are also language-specific API’s that utilize the ReST
+API but make it much easier for developers to integrate into their
+applications.</p>
+<p>For more details on the Cloud Files service please refer to
+<a class="reference external" href="http://www.rackspacecloud.com/cloud_hosting_products/files">http://www.rackspacecloud.com/cloud_hosting_products/files</a></p>
+</div>
+<div class="section" id="intended-audience">
+<h2>Intended Audience<a class="headerlink" href="#intended-audience" title="Permalink to this headline">¶</a></h2>
+<p>This document is intended for software developers who have chosen to use
+Cloud Files. It fully documents the ReST application programming interface
+(API) that allows developers to interact with the storage and CDN
+components of the Cloud Files system.</p>
+<blockquote>
+Prerequisites: Familiarity with HTTP, RFC 2616</blockquote>
+<p>Rackspace also provides company supported language-specific API’s in
+several popular programming languages.  The current list of supported
+API’s is C#/.NET, Java, PHP, Python, and Ruby.  These API’s utilize the
+ReST API and are provided to help developers rapidly integrate Cloud Files
+support into their applications without needing to write at the ReST
+interface.  Each API includes its own documentation in its “native”
+format.  For example, the Java API includes JavaDocs and the C#/.NET API
+includes a CHM file.</p>
+<p>System administrators and other users who are interested in the storage
+and CDN benefits of Cloud Files, should consider using the File Manager
+interface within the Rackspace Cloud Control Panel or third party tools
+like <a class="reference external" href="http://www.fireuploader.com/">Fireuploader</a>, <a class="reference external" href="http://www.cyberduck.ch/">Cyberduck</a>, and <cite>Cloud Files Manager_</cite>.  The control
+panel provides an easy to use web-based interface for uploading/downloading
+content to Cloud Files.</p>
+</div>
+<div class="section" id="concepts">
+<h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
+<p>Cloud Files is not a “file system” in the traditional sense. You will not
+be able to <strong>map</strong> or <strong>mount</strong> virtual disk drives like you can with
+other forms of storage such as a SAN or NAS. Since Cloud Files is a
+different way of thinking when it comes to storage so you should take a
+few moments to review the key concepts listed below.</p>
+<div class="section" id="accounts">
+<h3>Accounts<a class="headerlink" href="#accounts" title="Permalink to this headline">¶</a></h3>
+<p>The Cloud Files system is designed to be used by many different customers.
+Your user account is your portion of the Cloud Files system. A user must
+identify themselves with their Rackspace Cloud username and API Access Key
+and once authenticated, that user has full read/write access to the files
+stored under that user account. Please visit <a class="reference external" href="http://www.rackspacecloud.com">http://www.rackspacecloud.com</a>
+to obtain a Cloud Files account and enable your API Access Key.</p>
+</div>
+<div class="section" id="authentication">
+<h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h3>
+<p>The language and ReST API&#8217;s below describe how to authenticate against the
+Authentication service to receive Cloud Files connection parameters and an
+“authentication token”.  The token must be passed in for all subsequent
+Container/Object operations.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The language-specific API&#8217;s handle authentication, token passing,
+and HTTPS request/response communication.</p>
+</div>
+</div>
+<div class="section" id="permissions">
+<h3>Permissions<a class="headerlink" href="#permissions" title="Permalink to this headline">¶</a></h3>
+<p>There are no permissions or access-controls around Containers or Objects
+in Cloud Files.  Each user has their own storage account and has full
+access to that account. Users must authenticate with their credentials as
+described above, but once authenticated they can create/delete Containers
+and Objects within that Account.  The only way a user can access the
+content from another Account is if they share their Username/API Access
+Key or a session token.</p>
+</div>
+<div class="section" id="containers">
+<h3>Containers<a class="headerlink" href="#containers" title="Permalink to this headline">¶</a></h3>
+<p>A Container is a “storage compartment” for your data and provides a way
+for you to organize your data. You can think of a Container as a folder
+in Windows® or a directory in UNIX®. The primary difference between a
+Container and these other “file system” concepts is that Containers cannot
+be nested. You can, however, create an unlimited number of Containers
+within your account.  Data must be stored in a Container so you must have
+at least one Container defined in your account prior to uploading data.</p>
+<p>The only restrictions on Container names is that they cannot contain a
+forward slash, “/” character must be less than 256 bytes in length.
+Please note that the length restriction applies to the name after it has
+been URL encoded.  For example, a Container name of “Course Docs” would be
+URL encoded as “Course%20Docs” and therefore be 13 bytes in length rather
+than the expected 11.</p>
+</div>
+<div class="section" id="objects">
+<h3>Objects<a class="headerlink" href="#objects" title="Permalink to this headline">¶</a></h3>
+<p>An “Object” is the basic storage entity and any optional metadata that
+represents the “files” you store in the Cloud Files system. When you
+upload data to Cloud Files the data is stored as-is (no compression or
+encryption) and consists of a location (Container), the Object&#8217;s name,
+and any metadata consisting of key/value pairs. For instance, you may
+chose to store a backup of your digital photos and organize them into
+albums.  For example, each Object could be tagged with metadata such as
+“Album : Caribbean Cruise” or “Album : Aspen Ski Trip”.</p>
+<p>The only restriction on Object names is that they must be less than 1024
+bytes in length after URL encoding.  For example, an Object name of
+“C++final(v2).txt” should be URL encoded as “C%2B%2Bfinal%28v2%29.txt”
+and therefore be 24 bytes in length rather than the expected 16.</p>
+<p>The maximum allowable size for a storage Object is 5 gigabytes and the
+minimum is zero bytes.  For metadata, you should not exceed 90 individual
+key/value pairs for any one Object and the and the total byte length of
+all key/value pairs should not exceed 4KB (4096 bytes).</p>
+</div>
+<div class="section" id="operations">
+<h3>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h3>
+<p>Operations are the actions you perform within your Account. Creating or
+deleting Containers, uploading or downloading Objects, etc. The full list
+of operations is documented under the ReST API section. Operations may be
+performed via the ReST web service API or a language-specific API
+(currently we support Python, PHP, Java, Ruby, and C#/.NET).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All operations must include a valid authorization token.</p>
+</div>
+</div>
+<div class="section" id="cdn-enabled-containers">
+<h3>CDN-enabled Containers<a class="headerlink" href="#cdn-enabled-containers" title="Permalink to this headline">¶</a></h3>
+<p>To publish data that is to be served by Limelight Networks&#8217; Content
+Distribution Network (CDN), Containers which house the data must be
+“CDN-enabled”.  When a Container is CDN-enabled any files will be
+publicly accessible and not require an authentication token for read
+access.  Uploading content into a CDN-enabled Container is a secure
+operation and will require a valid authentication token.</p>
+<p>Each CDN-enabled Container has a unique Uniform Resource Locator (URL)
+that can be combined with its Object names and openly distributed in web
+pages, emails, or other applications.</p>
+<p>For example, a CDN-enabled Container named <em>photos</em> might be referenced as
+<a class="reference external" href="http://c0010171.cdn.cloudfiles.rackspacecloud.com">http://c0010171.cdn.cloudfiles.rackspacecloud.com</a>.  If that Container
+houses a screenshot called <em>wow1.jpg</em>, then that image can be served by
+Limelight Networks&#8217; CDN with the full URL of
+<a class="reference external" href="http://c0010171.cdn.cloudfiles.rackspacecloud.com/wow1.jpg">http://c0010171.cdn.cloudfiles.rackspacecloud.com/wow1.jpg</a>.  This URL can
+be embedded in HTML pages, email messages, blog posts, etc.  When that URL
+is accessed, a copy of that image is fetched from the Cloud Files storage
+system and cached in Limelight Networks&#8217; CDN and served from there for
+all subsequent requests for a configurable cache timeout (TTL) value.
+Setting the TTL of a CDN-enabled Container translates to setting the
+<tt class="docutils literal"><span class="pre">Expires</span></tt> and <tt class="docutils literal"><span class="pre">Cache-Control</span></tt> HTTP headers.</p>
+<p>Containers tracked in the CDN management service are completely separate
+and distinct from the Containers defined in the storage service.  It
+is possibly for a Container to be CDN-enabled even if it doesn&#8217;t exist
+in the storage system.  Users may want the ability to pre-generate
+CDN URL&#8217;s before actually uploading content and this separation gives
+them that ability.</p>
+<p>However, for the content to be served from the CDN, the Container names
+<strong>MUST</strong> match in both the CDN management service and the storage service.
+For example, you could CDN-enable a Container called <em>images</em> and be
+assigned the CDN URL, but you also need to create a Container called
+<em>images</em> in the storage service.</p>
+<p>For more details on the CDN operations refer to “Content Delivery Networks
+with Cloud Files”</p>
+</div>
+</div>
+<div class="section" id="language-specific-api-s">
+<h2>Language-specific API&#8217;s<a class="headerlink" href="#language-specific-api-s" title="Permalink to this headline">¶</a></h2>
+<p>A set of supported API&#8217;s in several popular languages are available to
+help put Cloud Files in the hands of developers.  These API&#8217;s provide a
+layer of abstraction on top of the base ReST API allowing programmers to
+work with a Container and Object model instead of working directly with
+HTTP requests and responses.   These API&#8217;s are free (as in beer and as in
+speech) to download, use, and modify.  They are all licensed under the
+MIT license as described in the COPYING file packaged with each API.  If
+you do make any improvements to an API, you are encouraged (but not
+required) to submit those changes back to us.</p>
+<p>The API&#8217;s are hosted at <a class="reference external" href="http://github.com/rackspace">http://github.com/rackspace</a>.  Feel free to
+coordinate your changes through github or if you prefer, send
+your changes to <a class="reference external" href="mailto:cloudfiles&#37;&#52;&#48;rackspacecloud&#46;com">cloudfiles<span>&#64;</span>rackspacecloud<span>&#46;</span>com</a>.  Just make sure to
+indicate which language and version you modified and send us a unified
+diff.</p>
+<p>Each API includes its own documentation (either HTML, PDF, or CHM).
+They also include code snippets and examples to help you get started.
+The currently supported API&#8217;s for Cloud Files are:</p>
+<ul class="simple">
+<li>PHP (requires 5.x and the modules: cURL, FileInfo, mbstring)</li>
+<li>Python (requires 2.4 or newer)</li>
+<li>Java (requires JRE v1.5 or newer)</li>
+<li>C#/.NET (requires .NET Framework v3.5)</li>
+<li>Ruby (requires 1.8 or newer and mime-tools module)</li>
+</ul>
+<p>There are no other supported language-specific API&#8217;s at this time.  You
+are welcome to create your own language API&#8217;s and we will help answer any
+questions during development, host your code if you like, and give you
+full credit for your work.</p>
+</div>
+<div class="section" id="rest-api-s">
+<h2>ReST API&#8217;s<a class="headerlink" href="#rest-api-s" title="Permalink to this headline">¶</a></h2>
+<p>The underlying API for Cloud Files is implemented as a set of ReSTful
+web services (Representational State Transfer). All Authentication and
+Container/Object operations can be performed with standard HTTP calls.
+See the <a class="reference external" href="http://en.wikipedia.org/wiki/Representational_State_Transfer">Wikipedia article</a> for more information about ReST.</p>
+<p>The following constraints apply to the ReST API&#8217;s HTTP requests:</p>
+<ul class="simple">
+<li>Maximum number of HTTP headers per request: 90</li>
+<li>Maximum length of all HTTP headers: 4096 bytes</li>
+<li>Maximum length per HTTP request line: 8192 bytes</li>
+<li>Maximum length of HTTP request: 5 gigabytes</li>
+<li>Maximum length of Container name: 256 bytes</li>
+<li>Maximum length of Object name: 1024 bytes</li>
+</ul>
+<p>Container and Object names should be properly URL encoded prior
+to interacting with the ReST interface (the language API&#8217;s handle
+URL encoding/decoding).  The length restrictions should be checked
+against the URL encoded string.</p>
+<p>Each ReST request against the Cloud Files system requires the inclusion of
+a specific “authorization token” HTTP header defined as <tt class="docutils literal"><span class="pre">X-Auth-Token</span></tt>.
+Clients obtain this token, along with the Cloud Files URI&#8217;s, by first
+using the Authentication service and supplying a valid Username and API
+Access Key.</p>
+<p>There are actually two different sets of ReST services that make up the
+full Cloud Files product.  The first ReST service identified with
+<tt class="docutils literal"><span class="pre">X-Storage-Url</span></tt> is used for managing the data stored in the system.
+Example operations are creating Containers and uploading Objects.  The
+second ReST service is for managing the CDN feature of Cloud Files and is
+identified by <tt class="docutils literal"><span class="pre">X-CDN-Management-Url</span></tt>.</p>
+<p>In the following sections, each HTTP method will be documented and which
+service the call should be made against.  For example, a <tt class="docutils literal"><span class="pre">PUT</span></tt> request
+against <tt class="docutils literal"><span class="pre">X-Storage-Url</span></tt> can be used to create a Container or upload an
+Object.  A <tt class="docutils literal"><span class="pre">PUT</span></tt> request against the <tt class="docutils literal"><span class="pre">X-CDN-Management-Url</span></tt> is used
+to CDN-enable a Container.</p>
+<p>The language-specific API&#8217;s mask this system separation from the
+programmer.  They simply create a Container and mark it “public” and it
+handles calling out to the appropriate back-end services using the
+appropriate ReST API.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All requests to authenticate and operate against Cloud Files are
+performed using SSL over HTTP (HTTPS) on TCP port 443.</p>
+</div>
+<p>The following diagram illustrates the various system interfaces and the
+ease with which content can be distributed over the CDN.  Authenticate,
+create a Container, upload Objects, mark the Container as <em>public</em> and
+begin serving that content from Limelight Networks&#8217; powerful CDN.</p>
+<div align="center" class="align-center"><img alt="_images/cf-systems.jpg" class="align-center" src="_images/cf-systems.jpg" /></div>
+<div class="section" id="id1">
+<h3>Authentication<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>In order to use the Cloud Files storage system, you must first have a
+valid username and API Access Key. Include these parameters as HTTP
+headers in the authentication request illustrated below.</p>
+<div class="section" id="request">
+<h4>Request<a class="headerlink" href="#request" title="Permalink to this headline">¶</a></h4>
+<p>Client authentication is provided via a ReST interface using the <tt class="docutils literal"><span class="pre">GET</span></tt>
+method, with &#8216;auth&#8217; supplied as the path. Additionally, two headers are
+required, <tt class="docutils literal"><span class="pre">X-Auth-User</span></tt> and <tt class="docutils literal"><span class="pre">X-Auth-Key</span></tt> with values for the username
+and API Access Key respectively.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>GET /v1.0 HTTP/1.1
+Host: auth.api.rackspacecloud.com
+X-Auth-User: jdoe
+X-Auth-Key: a86850deb2742ec3cb41518e26aa2d89</pre>
+</div>
+</div>
+<div class="section" id="response">
+<h4>Response<a class="headerlink" href="#response" title="Permalink to this headline">¶</a></h4>
+<p>When authentication is successful, an HTTP status 204 (No Content) is
+returned with three headers, <tt class="docutils literal"><span class="pre">X-Storage-Url</span></tt>, <tt class="docutils literal"><span class="pre">X-CDN-Management-Url</span></tt>,
+and <tt class="docutils literal"><span class="pre">X-Auth-Token</span></tt>. An HTTP status of 401 (Unauthorized) is returned
+upon authentication failure. All subsequent Container/Object operations
+against Cloud Files should be made against the URI specified in
+<tt class="docutils literal"><span class="pre">X-Storage-Url</span></tt> or <tt class="docutils literal"><span class="pre">X-CDN-Management-Url</span></tt> and must include the
+<tt class="docutils literal"><span class="pre">X-Auth-Token</span></tt> header.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Mon, 12 Nov 2007 15:32:21 GMT
+Server: Apache
+X-Storage-Url: https://storage.clouddrive.com/v1/CF_xer7_34
+X-CDN-Management-Url: https://cdn.clouddrive.com/v1/CF_xer7_34
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+Content-Length: 0
+Content-Type: text/plain; charset=UTF-8</pre>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">X-Storage-Url</span></tt> and <tt class="docutils literal"><span class="pre">X-CDN-Management-Url</span></tt> will need to be parsed
+and used in the connection and request line of all subsequent requests
+against Cloud Files. In the example response above, users connecting to
+Cloud Files would send most Container/Object requests with a Host header
+of <em>storage.clouddrive.com</em> and the request line&#8217;s version and account as
+<tt class="docutils literal"><span class="pre">/v1/CF_xer7_34</span></tt>.  To CDN-enable Containers or adjust CDN
+attributes, ReST requests should be sent to <em>cdn.clouddrive.com</em>. Note
+that authentication tokens are valid for a 24 hour period.</p>
+</div>
+</div>
+<div class="section" id="storage-services">
+<h3>Storage Services<a class="headerlink" href="#storage-services" title="Permalink to this headline">¶</a></h3>
+<p>The following section describes the ReST API for interacting with the
+storage component of Cloud Files.  All requests will be directed to the
+host and URL described in the <tt class="docutils literal"><span class="pre">X-Storage-Url</span></tt> HTTP header obtained
+during successful authentication.</p>
+<p>The following are some pointers for the use of the Storage services:</p>
+<ul class="simple">
+<li>Container names cannot exceed 256 bytes and cannot contain a &#8216;/&#8217;
+character</li>
+<li>Object names cannot exceed 1024 bytes and have no character
+restrictions</li>
+<li>Object and Container names must be URL-encoded</li>
+</ul>
+<div class="section" id="storage-account-services">
+<h4>Storage Account Services<a class="headerlink" href="#storage-account-services" title="Permalink to this headline">¶</a></h4>
+<p>The following operations can be performed at the account level of the URI.
+For example, the URI for the requests below will end with the Cloud Files
+account string:</p>
+<div class="highlight-python"><pre>METHOD /v1/&lt;account&gt; HTTP/1.1</pre>
+</div>
+<div class="section" id="get">
+<h5>GET<a class="headerlink" href="#get" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">GET</span></tt> operations against the <tt class="docutils literal"><span class="pre">X-Storage-Url</span></tt> for an account are
+performed to retrieve a list of existing storage Containers ordered by
+name.  The following list describes the optional query parameters that
+are supported with this request.</p>
+<ul class="simple">
+<li><strong>limit</strong> - For an integer value N, limits the number of results to
+at most N values.</li>
+<li><strong>marker</strong> - Given a string value X, return Object names greater in
+value than the specified marker.</li>
+<li><strong>format</strong> - Specify either <em>json</em> or <em>xml</em> to return the respective
+serialized response.</li>
+</ul>
+<p>At this time, a “prefix” query parameter is not supported at the Account
+level.</p>
+<div class="section" id="id2">
+<h6>Request<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h6>
+<p>The list of storage Containers is returned in the response body, one
+Container name per line.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id3">
+<h6>Response<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h6>
+<p>A list of containers is returned in the response body, one container per
+line. A 204 (No Content) HTTP return code will be passed back if the
+account has no containers.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 Ok
+Date: Thu, 07 Jun 2007 18:57:07 GMT
+Server: Apache
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 32
+
+images
+movies
+documents
+backups</pre>
+</div>
+</div>
+<div class="section" id="serialized-list-output">
+<h6>Serialized List Output<a class="headerlink" href="#serialized-list-output" title="Permalink to this headline">¶</a></h6>
+<p>If a <tt class="docutils literal"><span class="pre">format=xml</span></tt> or <tt class="docutils literal"><span class="pre">format=json</span></tt> argument is appended to the storage
+account URL, the service will serve extended container information
+serialized in the chosen format.  The sample responses below are formatted
+for readability.</p>
+<p>Sample JSON format request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;?format=json HTTP/1.1
+Host: storage.clouddrive.com
+Content-Length: 0
+X-Storage-Token: 182f9c0af0e828cfe3281767d29d19f4</pre>
+</div>
+<p>Sample JSON response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 OK
+Date: Tue, 25 Nov 2008 19:39:13 GMT
+Server: Apache
+Content-Type: application/json; charset=utf-8
+
+[
+  {"name":"test_container_1", "count":2, "bytes":78},
+  {"name":"test_container_2", "count":1, "bytes":17},
+]</pre>
+</div>
+<p>Sample XML format request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;?format=xml HTTP/1.1
+Host: storage.clouddrive.com
+Content-Length: 0
+X-Storage-Token: 182f9c0af0e828cfe3281767d29d19f4</pre>
+</div>
+<p>Sample XML response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 OK
+Date: Tue, 25 Nov 2008 19:42:35 GMT
+Server: Apache
+Content-Type: application/xml; charset=utf-8
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;account name="MichaelBarton"&gt;
+  &lt;container&gt;
+    &lt;name&gt;test_container_1&lt;/name&gt;
+    &lt;count&gt;2&lt;/count&gt;
+    &lt;bytes&gt;78&lt;/bytes&gt;
+  &lt;/container&gt;
+  &lt;container&gt;
+    &lt;name&gt;test_container_2&lt;/name&gt;
+    &lt;count&gt;1&lt;/count&gt;
+    &lt;bytes&gt;17&lt;/bytes&gt;
+  &lt;/container&gt;
+&lt;/account&gt;</pre>
+</div>
+</div>
+<div class="section" id="large-container-lists">
+<h6>Large Container Lists<a class="headerlink" href="#large-container-lists" title="Permalink to this headline">¶</a></h6>
+<p>The system will return a maximum of 10,000 Container names per request.
+To retrieve subsequent container names, another request must be made with
+a &#8216;marker&#8217; parameter. The marker indicates where the last list left off
+and the system will return container names greater than this marker, up to
+10,000 again.  Note that the ‘marker’ value should be URL encoded prior to
+sending the HTTP request.</p>
+<p>If 10,000 is larger than desired, a &#8216;limit&#8217; parameter may be given.</p>
+<p>If the number of container names returned equals the limit given (or
+10,000 if no limit is given), it can be assumed there are more container
+names to be listed. If the container name list is exactly divisible by the
+limit, the last request will simply have no content.</p>
+<p>For an example, let&#8217;s use a listing of five container names:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">apples</span>
+<span class="n">bananas</span>
+<span class="n">kiwis</span>
+<span class="n">oranges</span>
+<span class="n">pears</span>
+</pre></div>
+</div>
+<p>We&#8217;ll use a limit of 2 to show how things work:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;?limit=2
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+apples
+bananas</pre>
+</div>
+<p>Since we received 2 items back, we can assume there are more container
+names to list; so we make another request with a marker of the last item
+returned:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;?limit=2&amp;marker=bananas
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+kiwis
+oranges</pre>
+</div>
+<p>Again we have 2 items returned, there may be more:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;?limit=2&amp;marker=oranges
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+pears</pre>
+</div>
+<p>Now we received less than the limit number of container names; so we have
+the complete list.</p>
+</div>
+</div>
+<div class="section" id="head">
+<h5>HEAD<a class="headerlink" href="#head" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">HEAD</span></tt> operations against an account are performed to retrieve the
+number of Containers and the total bytes stored in Cloud Files for the
+account. This information is returned in two custom headers,
+<tt class="docutils literal"><span class="pre">X-Account-Container-Count</span></tt> and <tt class="docutils literal"><span class="pre">X-Account-Bytes-Used</span></tt>.</p>
+<div class="section" id="id4">
+<h6>Request<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h6>
+<p>Determine the number of Containers within the account and the total bytes
+stored.  Since the storage system is designed to store large amounts of
+data, care should be taken when representing the total bytes response as
+an “integer”; when possible, convert it to a 64-bit unsigned integer if
+your platform supports that primitive type.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>HEAD /&lt;api version&gt;/&lt;account&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id5">
+<h6>Response<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h6>
+<p>The HTTP return code will be 204 (No Content) if the request succeeds.
+A 401 (Unauthorized) will be returned for an invalid account or access
+key.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Thu, 07 Jun 2007 18:57:07 GMT
+Server: Apache
+X-Account-Container-Count: 3
+X-Account-Total-Bytes-Used: 323479</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="storage-container-services">
+<h4>Storage Container Services<a class="headerlink" href="#storage-container-services" title="Permalink to this headline">¶</a></h4>
+<p>This section documents the ReST operations that can be performed on
+Containers. All operations are valid HTTP request methods and will
+resemble this format:</p>
+<div class="highlight-python"><pre>METHOD /v1/&lt;account&gt;/&lt;container&gt; HTTP/1.1</pre>
+</div>
+<div class="section" id="id6">
+<h5>HEAD<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">HEAD</span></tt> operations against a storage Container are used to determine the
+number of Objects, and the total bytes of all Objects stored in the
+Container.</p>
+<div class="section" id="id7">
+<h6>Request<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h6>
+<p>Determine the number of Objects and total stored bytes within the
+Container.  Since the storage system is designed to store large amounts
+of data, care should be taken when representing the total bytes response
+as an “integer”; when possible, convert it to a 64-bit unsigned integer
+if your platform supports that primitive type.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>HEAD /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id8">
+<h6>Response<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h6>
+<p>The HTTP return code will be 204 (No Content) if the Container exists,
+and 404 (Not Found) if it does not. The Object count and utilization are
+returned in the <tt class="docutils literal"><span class="pre">X-Container-Object-Count</span></tt> and <tt class="docutils literal"><span class="pre">X-Container-Bytes-Used</span></tt>
+headers respectively.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Wed, 11 Jul 2007 19:37:41 GMT
+Content-type: text/html
+X-Container-Object-Count: 7
+X-Container-Bytes-Used: 413</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id9">
+<h5>GET<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">GET</span></tt> operations against a storage Container name are performed to
+retrieve a list of Objects stored in the Container. Additionally, there
+are a number of optional query parameters that can be used to refine the
+list results.</p>
+<div class="section" id="id10">
+<h6>Request<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h6>
+<p>A request with no query parameters will return the full list of Object
+names stored in the Container up to 10,000 names.  Optionally specifying
+the query parameters will filter the full list and return a subset of
+Objects.</p>
+<ul class="simple">
+<li><strong>limit</strong> - For an integer value N, limits the number of results to at
+most N values.</li>
+<li><strong>marker</strong> - Given a string value X, return Object names greater in
+value than the specified marker.</li>
+<li><strong>prefix</strong> - For a string value X, causes the results to be limited
+to Object names beginning with the substring X.</li>
+<li><strong>format</strong> - Specify either <em>json</em> or <em>xml</em> to return the respective
+serialized response.</li>
+<li><strong>path</strong> - For a string value X, return the Object names nested in the
+pseudo path (assuming preconditions are met - see below).</li>
+</ul>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;[?parm=value] HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id11">
+<h6>Response<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h6>
+<p>A list of Objects is returned in the response body, one Object name per
+line. A 204 (No Content) HTTP return code will be passed back if the
+Container is empty or does not exist for the specified account. If an
+incorrect Account is specified, the HTTP return code will be 404
+(Not Found).</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 Ok
+Date: Thu, 07 Jun 2007 18:50:19 GMT
+Server: Apache
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 171
+
+kate_beckinsale.jpg
+How To Win Friends And Influence People.pdf
+moms_birthday.jpg
+poodle_strut.mov
+Disturbed - Down With The Sickness.mp3
+army_of_darkness.avi
+the_mad.avi</pre>
+</div>
+</div>
+<div class="section" id="id12">
+<h6>Serialized List Output<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h6>
+<p>If a <tt class="docutils literal"><span class="pre">format=xml</span></tt> or <tt class="docutils literal"><span class="pre">format=json</span></tt> argument is appended to the storage
+account URL, the service will serve extended container information
+serialized in the chosen format.  Other than the <tt class="docutils literal"><span class="pre">?format=xml|json</span></tt>
+param, it will return the same status/errors codes.  The sample responses
+below are formatted for readability.</p>
+<p>Sample JSON format request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;?format=json HTTP/1.1
+Host: storage.clouddrive.com
+Content-Length: 0
+X-Storage-Token: 182f9c0af0e828cfe3281767d29d19f4</pre>
+</div>
+<p>Sample JSON response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 OK
+Date: Tue, 25 Nov 2008 19:39:13 GMT
+Server: Apache
+Content-Length: 387
+Content-Type: application/json; charset=utf-8
+
+[
+  {"name":"test_obj_1",
+   "hash":"4281c348eaf83e70ddce0e07221c3d28",
+   "bytes":14,
+   "content_type":"application\/octet-stream",
+   "last_modified":"2009-02-03T05:26:32.612278"},
+  {"name":"test_obj_2",
+   "hash":"b039efe731ad111bc1b0ef221c3849d0",
+   "bytes":64,
+   "content_type":"application\/octet-stream",
+   "last_modified":"2009-02-03T05:26:32.612278"},
+]</pre>
+</div>
+<p>Sample XML format request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;?format=xml HTTP/1.1
+Host: storage.clouddrive.com
+X-Storage-Token: 182f9c0af0e828cfe3281767d29d19f4</pre>
+</div>
+<p>Sample XML response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 OK
+Date: Tue, 25 Nov 2008 19:42:35 GMT
+Server: Apache
+Content-Length: 643
+Content-Type: application/xml; charset=utf-8
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;container name="test_container_1"&gt;
+  &lt;object&gt;
+    &lt;name&gt;test_object_1&lt;/name&gt;
+    &lt;hash&gt;4281c348eaf83e70ddce0e07221c3d28&lt;/hash&gt;
+    &lt;bytes&gt;14&lt;/bytes&gt;
+    &lt;content_type&gt;application/octet-stream&lt;/content_type&gt;
+    &lt;last_modified&gt;2009-02-03T05:26:32.612278&lt;/last_modified&gt;
+  &lt;/object&gt;
+  &lt;object&gt;
+    &lt;name&gt;test_object_2&lt;/name&gt;
+    &lt;hash&gt;b039efe731ad111bc1b0ef221c3849d0&lt;/hash&gt;
+    &lt;bytes&gt;64&lt;/bytes&gt;
+    &lt;content_type&gt;application/octet-stream&lt;/content_type&gt;
+    &lt;last_modified&gt;2009-02-03T05:26:32.612278&lt;/last_modified&gt;
+  &lt;/object&gt;
+&lt;/container&gt;</pre>
+</div>
+</div>
+<div class="section" id="large-object-lists">
+<h6>Large Object lists<a class="headerlink" href="#large-object-lists" title="Permalink to this headline">¶</a></h6>
+<p>The system will return a maximum of 10,000 Object names per request. To
+retrieve subsequent Object names, another request must be made with a
+&#8216;marker&#8217; parameter. The marker indicates where the last list left off
+and the system will return Object names greater than this marker, up to
+10,000 again.  Note that the ‘marker’ value should be URL encoded prior
+to sending the HTTP request.</p>
+<p>If 10,000 is larger than desired, a &#8216;limit&#8217; parameter may be given.</p>
+<p>If the number of Object names returned equals the limit given (or 10,000
+if no limit is given), it can be assumed there are more Object names to be
+listed. If the container name list is exactly divisible by the limit, the
+last request will simply have no content.</p>
+<p>For an example, let&#8217;s use a listing of five Object names:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">apples</span>
+<span class="n">bananas</span>
+<span class="n">kiwis</span>
+<span class="n">oranges</span>
+<span class="n">pears</span>
+</pre></div>
+</div>
+<p>We&#8217;ll use a limit of 2 to show how things work:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;?limit=2
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+apples
+bananas</pre>
+</div>
+<p>Since we received 2 items back, we can assume there are more Object names
+to list; so we make another request with a marker of the last item
+returned:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;?limit=2&amp;marker=bananas
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+kiwis
+oranges</pre>
+</div>
+<p>Again we have 2 items returned, there may be more:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;?limit=2&amp;marker=oranges
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+pears</pre>
+</div>
+<p>Now we received less than the limit number of container names; so we have
+the complete list.</p>
+</div>
+<div class="section" id="pseudo-hierarchical-folders-directories">
+<h6>Pseudo hierarchical folders/directories<a class="headerlink" href="#pseudo-hierarchical-folders-directories" title="Permalink to this headline">¶</a></h6>
+<p>Users will be able to simulate a hierarchical structure in Cloud Files
+by following a few guidelines.  Object names must contain the forward
+slash character ‘/’ as a path element separator and also create
+“directory marker” Objects, then they will be able to traverse this nested
+structure with the new “path” query parameter.  This can best be
+illustrated by example:</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For the purposes of this example, the Container where the Objects
+reside is called “backups”.  All Objects in this example start with
+a prefix of “photos” and should NOT be confused with the Container
+name.  In the example, the full URI of the &#8220;me.jpg&#8221; file would be
+<a class="reference external" href="https://storage.clouddrive.com/v1/CF_xer7_343/backups/photos/me.jpg">https://storage.clouddrive.com/v1/CF_xer7_343/backups/photos/me.jpg</a></p>
+</div>
+<p>In the example, the following “real” Objects are uploaded to the storage
+system with names representing their full filesystem path.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">photos</span><span class="o">/</span><span class="n">animals</span><span class="o">/</span><span class="n">dogs</span><span class="o">/</span><span class="n">poodle</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">animals</span><span class="o">/</span><span class="n">dogs</span><span class="o">/</span><span class="n">terrier</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">animals</span><span class="o">/</span><span class="n">cats</span><span class="o">/</span><span class="n">persian</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">animals</span><span class="o">/</span><span class="n">cats</span><span class="o">/</span><span class="n">siamese</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">plants</span><span class="o">/</span><span class="n">fern</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">plants</span><span class="o">/</span><span class="n">rose</span><span class="o">.</span><span class="n">jpg</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">me</span><span class="o">.</span><span class="n">jpg</span>
+</pre></div>
+</div>
+<p>To take advantage of this feature, the <em>directory marker</em> Objects must
+also be created to represent the appropriate directories.  The following
+additional Objects need to be created.  A good convention would be to
+create these as zero or one byte files with a Content-Type of
+<em>application/directory</em>.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">photos</span><span class="o">/</span><span class="n">animals</span><span class="o">/</span><span class="n">dogs</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">animals</span><span class="o">/</span><span class="n">cats</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">animals</span>
+<span class="n">photos</span><span class="o">/</span><span class="n">plants</span>
+<span class="n">photos</span>
+</pre></div>
+</div>
+<p>Now issuing a <tt class="docutils literal"><span class="pre">GET</span></tt> request against the Container name coupled with the
+“path” query parameter of the directory to list can traverse these
+“directories”.  Only the request line and results are depicted below
+excluding other request/response headers.:</p>
+<div class="highlight-python"><pre>GET /v1/AccountString/backups?path=photos HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+photos/animals
+photos/cats
+photos/me.jpg</pre>
+</div>
+<p>To traverse down into the <em>animals</em> directory, specify that path.:</p>
+<div class="highlight-python"><pre>GET /v1/AccountString/backups?path=photos/animals
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+
+photos/animals/dogs
+photos/animals/cats</pre>
+</div>
+<p>By combining this “path” query parameter with the “format” query
+parameter, users will be able to easily distinguish between virtual
+folders/directories by Content-Type and build interfaces that allow
+traversal of the pseudo-nested structure.</p>
+</div>
+</div>
+<div class="section" id="put">
+<h5>PUT<a class="headerlink" href="#put" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">PUT</span></tt> operations against a storage Container are used to create that
+Container.</p>
+<div class="section" id="id13">
+<h6>Request<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h6>
+<p>Containers are “storage compartments” for your data.  The URL encoded
+name must be less than 256 bytes and cannot contain a forward slash
+&#8216;/&#8217; character.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>PUT /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id14">
+<h6>Response<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h6>
+<p>No content is returned. A status code of 201 (Created) indicates that the
+Container was created as requested. Container <tt class="docutils literal"><span class="pre">PUT</span></tt> requests are
+idempotent and a code of 202 (Accepted) is returned when the Container
+already existed.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 201 Created
+Date: Thu, 07 Jun 2007 18:50:19 GMT
+Server: Apache
+Content-Type: text/plain; charset=UTF-8</pre>
+</div>
+</div>
+</div>
+<div class="section" id="delete">
+<h5>DELETE<a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">DELETE</span></tt> operations against a storage Container are used to permanently
+remove that Container.  The Container must be empty before it can be
+deleted.</p>
+<div class="section" id="id15">
+<h6>Request<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h6>
+<p>The Container must be empty before it can be deleted.  A <tt class="docutils literal"><span class="pre">HEAD</span></tt> request
+against the Container can be used to determine if it contains any Objects.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>DELETE /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id16">
+<h6>Response<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h6>
+<p>No content is returned. A status code of 204 (No Content) indicates
+success, 404 (Not Found) is returned if the requested Container was not
+found, and a 409 (Conflict) if the Container is not empty (no response
+body will be generated).</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Thu, 07 Jun 2007 18:57:07 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: text/plain; charset=UTF-8</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="storage-object-services">
+<h4>Storage Object Services<a class="headerlink" href="#storage-object-services" title="Permalink to this headline">¶</a></h4>
+<p>An Object represents the data and any extra metadata for the files stored
+in the system. Through the ReST interface, metadata for an Object can be
+included by adding custom HTTP headers to the request and the data payload
+as the request body.  Objects cannot exceed 5GB and must have names that
+do not exceed 1024 bytes after URL encoding.</p>
+<div class="section" id="id17">
+<h5>HEAD<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">HEAD</span></tt> operations on an Object are used to retrieve Object metadata and
+other standard HTTP headers.</p>
+<div class="section" id="id18">
+<h6>Request<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h6>
+<p>The only required header to be sent in the request is the authorization
+token.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>HEAD /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;/&lt;object&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id19">
+<h6>Response<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h6>
+<p>No response body is returned. Metadata is returned as HTTP headers. A
+status code of 204 (No Content) indicates success, status 404 (Not Found)
+is returned when the Object does not exist.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Thu, 07 Jun 2007 20:59:39 GMT
+Server: Apache
+Last-Modified: Fri, 12 Jun 2007 13:40:18 GMT
+ETag: 8a964ee2a5e88be344f36c22562a6486
+Content-Length: 512000
+Content-Type: text/plain; charset=UTF-8
+X-Object-Meta-Meat: Bacon
+X-Object-Meta-Fruit: Bacon
+X-Object-Meta-Veggie: Bacon
+X-Object-Meta-Dairy: Bacon</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id20">
+<h5>GET<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">GET</span></tt> operations against an Object are used to retrieve the Object&#8217;s
+data.</p>
+<div class="section" id="id21">
+<h6>Request<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h6>
+<p>Note that you can perform <em>conditional GET</em> requests by using certain
+HTTP headers as documented in <a class="reference external" href="http://www.ietf.org/rfc/rfc2616.txt">RFC 2616</a>. Cloud Files supports the
+following headers:</p>
+<ul class="simple">
+<li>If-Match</li>
+<li>If-None-Match</li>
+<li>If-Modified-Since</li>
+<li>If-Unmodified-Since</li>
+</ul>
+<p>It is also possible to fetch a portion of data using the HTTP <tt class="docutils literal"><span class="pre">Range</span></tt>
+header. At this time, Cloud Files does not support the full specification
+for <tt class="docutils literal"><span class="pre">Range</span></tt> but basic support is provided. Cloud Files only allows a
+single range that includes OFFSET and/or LENGTH. We support a sub-set of
+<tt class="docutils literal"><span class="pre">Range</span></tt> and do not adhere to the full RFC-2616 specification. We support
+specifying OFFSET-LENGTH where either OFFSET or LENGTH can be optional
+(not both at the same time). The following are supported forms of the
+header:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Range:</span> <span class="pre">bytes=-5</span></tt> - first five bytes of the Object</li>
+<li><tt class="docutils literal"><span class="pre">Range:</span> <span class="pre">bytes=10-15</span></tt> - the five bytes after a 10 byte offset</li>
+<li><tt class="docutils literal"><span class="pre">Range:</span> <span class="pre">bytes=32-</span></tt> - all data after the first 32 bytes of the Object</li>
+</ul>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;/&lt;object&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id22">
+<h6>Response<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h6>
+<p>The Object&#8217;s data is returned in the response body.  Object metadata is
+returned as HTTP headers.  A status of 200 (Ok) indicates success, and
+status 404 (Not Found) if no such Object exists.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 Ok
+Date: Wed, 11 Jul 2007 19:37:41 GMT
+Server: Apache
+Last-Modified: Fri, 12 Jun 2007 13:40:18 GMT
+ETag: b0dffe8254d152d8fd28f3c5e0404a10
+Content-type: text/html
+Content-Length: 512000
+
+[ ... ]</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id23">
+<h5>PUT<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">PUT</span></tt> operations are used to write, or overwrite, an Object&#8217;s metadata
+and content.</p>
+<p>You can ensure end-to-end data integrity by including an MD5 checksum of
+your Object&#8217;s data in the ETag header.  You are not required to include
+the ETag header, but it is recommended to ensure that the storage system
+successfully stored your Object&#8217;s content.</p>
+<p>The HTTP response will include the MD5 checksum of the data written to
+the storage system.  If you do not send the ETag in the request, you
+should compare the value returned with your content&#8217;s MD5 locally to
+perform the end-to-end data validation on the client side.</p>
+<p>Objects can be assigned custom metadata by including additional HTTP
+headers on the <tt class="docutils literal"><span class="pre">PUT</span></tt> request.</p>
+<div class="section" id="id24">
+<h6>Request<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h6>
+<p>The Object can be created with custom metadata via HTTP headers
+identified with the <tt class="docutils literal"><span class="pre">X-Object-Meta-</span></tt> prefix.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>PUT /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;/&lt;object&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+ETag: 8a964ee2a5e88be344f36c22562a6486
+Content-Length: 512000
+X-Object-Meta-PIN: 1234
+
+[ ... ]</pre>
+</div>
+</div>
+<div class="section" id="id25">
+<h6>Response<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h6>
+<p>No response body is returned. A status code of 201 (Created) indicates
+a successful write, status 412 (Length Required) denotes a missing
+<tt class="docutils literal"><span class="pre">Content-Length</span></tt> or <tt class="docutils literal"><span class="pre">Content-Type</span></tt> header in the request. If the
+MD5 checksum of the data written to the storage system does NOT match
+the (optionally) supplied ETag value, a 422 (Unprocessable Entity)
+response is returned.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 201 Created
+Date: Thu, 07 Jun 2007 18:57:07 GMT
+Server: Apache
+ETag: d9f5eb4bba4e2f2f046e54611bc8196b
+Content-Length: 0
+Content-Type: text/plain; charset=UTF-8</pre>
+</div>
+</div>
+<div class="section" id="chunked-put">
+<h6>Chunked PUT<a class="headerlink" href="#chunked-put" title="Permalink to this headline">¶</a></h6>
+<p>Users can upload data without needing to know in advance the amount of
+data to be uploaded.  Users can do this by specifying an HTTP header of
+<tt class="docutils literal"><span class="pre">Transfer-Encoding:</span> <span class="pre">chunked</span></tt> and not using a <tt class="docutils literal"><span class="pre">Content-Length</span></tt> header.
+A good use of this feature would be doing a DB dump, piping the output
+through gzip, then piping the data directly into Cloud Files without
+having to buffer the data to disk to compute the file size. If users
+attempt to upload more that 5GB with this method, the server will close
+the TCP/IP connection after 5GB and purge the customer data from the
+system.  Users must take responsibility to ensure the data they transfer
+will be less than 5GB or to split it into 5GB chunks each in its own
+storage Object.</p>
+<p>Sample chunked request:</p>
+<div class="highlight-python"><pre>PUT /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;/&lt;object&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+Transfer-Encoding: chunked
+X-Object-Meta-PIN: 1234
+
+19
+A bunch of data broken up
+D
+ into chunks.
+0</pre>
+</div>
+</div>
+</div>
+<div class="section" id="post">
+<h5>POST<a class="headerlink" href="#post" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">POST</span></tt> operations against an Object name are used to set and overwrite
+arbitrary key/value metadata.  You cannot use the <tt class="docutils literal"><span class="pre">POST</span></tt> operation to
+change any of the Object&#8217;s other headers such as <tt class="docutils literal"><span class="pre">Content-Type</span></tt>,
+<tt class="docutils literal"><span class="pre">ETag</span></tt>, etc.  It is not used to upload storage Objects (see <tt class="docutils literal"><span class="pre">PUT</span></tt>).</p>
+<div class="section" id="id26">
+<h6>Request<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h6>
+<p>Key names must be prefixed with <tt class="docutils literal"><span class="pre">X-Object-Meta-</span></tt>.  A <tt class="docutils literal"><span class="pre">POST</span></tt> request
+will delete all existing metadata added with a previous <tt class="docutils literal"><span class="pre">PUT/POST</span></tt>.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>POST /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;/&lt;object&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+X-Object-Meta-Fruit: Apple
+X-Object-Meta-Veggie: Carrot</pre>
+</div>
+</div>
+<div class="section" id="id27">
+<h6>Response<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h6>
+<p>No response body is returned. A status code of 202 (Accepted) indicates
+success, status 404 (Not Found) is returned when the requested Object
+does not exist.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 202 Accepted
+Date: Thu, 07 Jun 2007 20:59:39 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: text/plain; charset=UTF-8</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id28">
+<h5>DELETE<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">DELETE</span></tt> operations on an Object are used to permanently remove that
+Object from the storage system (metadata and data).</p>
+<div class="section" id="id29">
+<h6>Request<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h6>
+<p>Deleting an Object is processed immediately at the time of the request.
+Any subsequent <tt class="docutils literal"><span class="pre">GET</span></tt>, <tt class="docutils literal"><span class="pre">HEAD</span></tt>, <tt class="docutils literal"><span class="pre">POST</span></tt>, or <tt class="docutils literal"><span class="pre">DELETE</span></tt> operations will
+return a 404 (Not Found) error.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>DELETE /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt;/&lt;object&gt; HTTP/1.1
+Host: storage.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id30">
+<h6>Response<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h6>
+<p>No response body is returned. A status code of 204 (No Content) indicates
+success, status 404 (Not Found) is returned when the Object does not
+exist.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Thu, 07 Jun 2007 20:59:39 GMT
+Server: Apache
+Content-Type: text/plain; charset=UTF-8</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="cdn-services">
+<h3>CDN Services<a class="headerlink" href="#cdn-services" title="Permalink to this headline">¶</a></h3>
+<p>The following is a list of API&#8217;s that can be used for CDN Account and
+container operations.  All of the ReST method described below must be
+issued against the CDN Management service as defined in the
+<tt class="docutils literal"><span class="pre">X-CDN-Management–Url</span></tt> returned by a successful authentication.</p>
+<div class="section" id="cdn-account-operations">
+<h4>CDN Account Operations<a class="headerlink" href="#cdn-account-operations" title="Permalink to this headline">¶</a></h4>
+<p>The following section describes the methods allowed against the account
+portion URI and conform to the following format:</p>
+<div class="highlight-python"><pre>METHOD /v1/&lt;account&gt; HTTP\1.1</pre>
+</div>
+<div class="section" id="id31">
+<h5>GET<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">GET</span></tt> operations against the <tt class="docutils literal"><span class="pre">X-CDN-Management-Url</span></tt> for an account
+are performed to retrieve a list of existing CDN-enabled Containers.
+Like the storage system’s <tt class="docutils literal"><span class="pre">GET</span></tt> Container, the CDN management service
+allows the following query parameters:</p>
+<ul class="simple">
+<li><strong>limit</strong> — For an integer value N, limits the number of results to
+at most N values.</li>
+<li><strong>marker</strong> — Given a string value X, return Object names greater in
+value than the specified marker.</li>
+<li><strong>format</strong> — Specify either “json” or “xml” to return the respective
+serialized response.</li>
+<li><strong>enabled_only</strong> – Set to “true” to return only the CDN-enabled
+Containers.</li>
+</ul>
+<p>Like the storage system, it is possible to request the output in a
+serialized format in either JSON or XML with the “format” query
+parameter.</p>
+<p>Also like the storage system, using “limit” and “marker” provides a
+mechanism to iterate through the entire list of Containers.  Keep in
+mind that the value for marker will need to be URL encoded before
+issuing the request.</p>
+<p>There is also support for filtering the list to only return the list
+of Containers that are currently CDN-enabled.  Passing in a query
+parameter of <tt class="docutils literal"><span class="pre">?enabled_only=true</span></tt> will suppress any “private”
+Containers from appearing in the list.</p>
+<div class="section" id="id32">
+<h6>Request<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h6>
+<p>The list of CDN-enabled Containers is returned in the response body,
+one Container name per line.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>GET /&lt;api version&gt;/&lt;account&gt; HTTP/1.1
+Host: cdn.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id33">
+<h6>Response<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h6>
+<p>A list of containers is returned in the response body, one container per
+line. A 204 (No Content) HTTP return code will be passed back if the
+account has no containers.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 Ok
+Date: Thu, 07 Jun 2007 18:57:07 GMT
+Server: Apache
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 13
+
+images
+movies</pre>
+</div>
+</div>
+<div class="section" id="id34">
+<h6>Serialized List Output<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h6>
+<p>If a <tt class="docutils literal"><span class="pre">format=xml</span></tt> or <tt class="docutils literal"><span class="pre">format=json</span></tt> argument is appended to the CDN
+management URL, the service will serve extended container information
+serialized in the chosen format.  Other than the <tt class="docutils literal"><span class="pre">?format=xml|json</span></tt>
+param, it will return the same status/errors codes.  The sample responses
+below are formatted for readability.</p>
+<p>Sample JSON format request:</p>
+<div class="highlight-python"><pre>GET /v1/&lt;account&gt;?format=json HTTP/1.1
+Host: cdn.clouddrive.com
+X-Auth-Token: a6e3359b-3749-440a-9292-0bdcb0e33617</pre>
+</div>
+<p>Sample JSON response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 OK
+Date: Mon, 09 Mar 2009 20:07:47 GMT
+Server: Apache
+Content-Length: 127
+Content-Type: application/json; charset=utf-8
+
+[
+  {"name":"test_container",
+   "cdn_enabled":"true",
+   "ttl":28800,
+   "log_retention":"true",
+   "cdn_uri":"http://c0010171.cdn.cloudfiles.rackspacecloud.com/"},
+]</pre>
+</div>
+<p>Sample XML format request:</p>
+<div class="highlight-python"><pre>GET /v1/&lt;account&gt;?format=xml HTTP/1.1
+Host: cdn.clouddrive.com
+X-Auth-Token: a6e3359b-3749-440a-9292-0bdcb0e33617</pre>
+</div>
+<p>Sample XML response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 OK
+Date: Mon, 09 Mar 2009 20:11:27 GMT
+Server: Apache
+Content-Length: 267
+Content-Type: application/xml; charset=utf-8
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;account name="WidgetsRNotUs.invalid"&gt;
+  &lt;container&gt;
+      &lt;name&gt;images&lt;/name&gt;
+      &lt;cdn_enabled&gt;True&lt;/cdn_enabled&gt;
+      &lt;ttl&gt;86400&lt;/ttl&gt;
+      &lt;log_retention&gt;True&lt;/log_retention&gt;
+      &lt;cdn_url&gt;http://c0010171.cdn.cloudfiles.rackspacecloud.com/&lt;/cdn_url&gt;
+  &lt;/container&gt;
+&lt;/account&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="cdn-container-services">
+<h4>CDN Container Services<a class="headerlink" href="#cdn-container-services" title="Permalink to this headline">¶</a></h4>
+<p>This section documents the ReST operations against the CDN management
+service that can be performed on Containers. All operations are valid
+HTTP request methods and will resemble this format:</p>
+<div class="highlight-python"><pre>METHOD /v1/&lt;account&gt;/&lt;container&gt; HTTP/1.1</pre>
+</div>
+<p>Containers tracked in the CDN management service are completely separate
+and distinct from the Containers defined in the storage service.  It
+is possibly for a Container to be CDN-enabled even if it doesn&#8217;t exist
+in the storage system.  Users may want the ability to pre-generate
+CDN URL&#8217;s before actually uploading content and this separation gives
+them that ability.</p>
+<p>However, for the content to be served from the CDN, the Container names
+<strong>MUST</strong> match in both the CDN management service and the storage service.
+For example, you could CDN-enable a Container called <em>images</em> and be
+assigned the CDN URL, but you also need to create a Container called
+<em>images</em> in the storage service and populate it with the content you
+want to serve over the CDN.</p>
+<div class="section" id="id35">
+<h5>HEAD<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">HEAD</span></tt> operations against a CDN-enabled Container are used to determine
+the CDN attributes of the Container.</p>
+<div class="section" id="id36">
+<h6>Request<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h6>
+<p>If the Container is (or has ever been) CDN-enabled, the URI, TTL, and
+enabled-status are returned in the response headers.  Its CDN URI can
+be combined with any Object name within the Container to form the
+publicly accessible URL for that Object for distribution over Limelight
+Networks&#8217; system.  The TTL is how many seconds that Object will be
+cached in the CDN system before re-fetching the Object.  The
+enabled-status indicates if the Container is currently marked to allow
+public serving of Objects via CDN.  The log_retention setting
+specifies if the CDN access logs should be collected and stored in
+the Cloud Files storage system.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>HEAD /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt; HTTP/1.1
+Host: cdn.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb</pre>
+</div>
+</div>
+<div class="section" id="id37">
+<h6>Response<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h6>
+<p>The HTTP return code will be 204 (No Content) if the Container exists,
+and 404 (Not Found) if it does not. The CDN attributes are returned in
+HTTP headers.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Wed, 11 Jul 2007 19:37:41 GMT
+Content-type: text/html
+X-CDN-Enabled: True
+X-CDN-URI: http://c0010171.cdn.cloudfiles.rackspacecloud.com/
+X-TTL: 86400
+X-Log-Retention: True</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id38">
+<h5>PUT<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">PUT</span></tt> operations against a Container are used to initially CDN-enable
+that Container and set its attributes.</p>
+<div class="section" id="id39">
+<h6>Request<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h6>
+<p>When a Container is CDN-enabled, any Objects stored in that Container
+will be publicly accessible over Limelight Networks&#8217; CDN by combining
+the Container&#8217;s CDN URI with the Object name.  Any Objects accessed will
+be cached within the CDN for TTL seconds (the default is one day).  On
+the next access after the TTL expiration, the CDN will re-fetch the
+Object and cache it again for another TTL seconds.  The minimum TTL that
+can be set is 1 hour and 3 days (3600-259200 seconds).</p>
+<p>To specify the TTL, include an HTTP header of <tt class="docutils literal"><span class="pre">X-TTL:</span> <span class="pre">integer_seconds</span></tt>
+Setting the TTL translates to setting the HTTP <tt class="docutils literal"><span class="pre">Expires</span></tt> and
+<tt class="docutils literal"><span class="pre">Cache-Control</span></tt> headers for the cached Object.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>PUT /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt; HTTP/1.1
+Host: cdn.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+X-TTL: 2592000
+X-Log-Retention: True</pre>
+</div>
+</div>
+<div class="section" id="id40">
+<h6>Response<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h6>
+<p>No content is returned. A status code of 201 (Created) indicates that
+the Container was CDN-enabled as requested. The response will contain
+an HTTP header to indicate the URL that can be combined with Object names
+to serve Objects through the CDN.  If the Container is already
+CDN-enabled, a 202 (Accepted) response is returned and the TTL is
+adjusted.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 201 Created
+Date: Thu, 07 Jun 2007 18:50:19 GMT
+Server: Apache
+Content-Type: text/plain; charset=UTF-8
+X-CDN-URI: http://c0010171.cdn.cloudfiles.rackspacecloud.com/</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id41">
+<h5>POST<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">POST</span></tt> operations against a CDN-enabled Container are used to adjust
+CDN attributes.</p>
+<div class="section" id="id42">
+<h6>Request<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h6>
+<p>The <tt class="docutils literal"><span class="pre">POST</span></tt> operation can be used to set a new TTL cache expiration or
+to enable/disable public sharing over the CDN.  Keep in mind that if
+you have content currently cached in the CDN, setting your Container
+back to private will NOT purge the CDN cache; you will have to wait for
+the TTL to expire.</p>
+<p>Sample request:</p>
+<div class="highlight-python"><pre>POST /&lt;api version&gt;/&lt;account&gt;/&lt;container&gt; HTTP/1.1
+Host: cdn.clouddrive.com
+X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
+X-TTL: 86400
+X-CDN-Enabled: True
+X-Log-Retention: True</pre>
+</div>
+</div>
+<div class="section" id="id43">
+<h6>Response<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h6>
+<p>No content is returned. A status code of 202 (Accepted) indicates
+success, 404 (Not Found) is returned if the requested Container was
+not found.  The CDN URI is returned in the HTTP header, X-CDN-URI.</p>
+<p>Sample response:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Thu, 07 Jun 2007 18:57:07 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: text/plain; charset=UTF-8
+X-CDN-URI: http://c0010171.cdn.cloudfiles.rackspacecloud.com/</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>This section introduces you to a command-line utility and demonstrates
+interacting with the ReST interfaces.</p>
+<div class="section" id="using-curl">
+<h3>Using cURL<a class="headerlink" href="#using-curl" title="Permalink to this headline">¶</a></h3>
+<p>cURL is a command-line tool available on most UNIX®-like environments and
+Mac OS X® and can even be downloaded for Windows®.  For more information
+on cURL, visit <a class="reference external" href="http://curl.haxx.se/">http://curl.haxx.se/</a>.</p>
+<p>cURL allows you to transmit and receive HTTP requests and responses from
+the command-line or from within a shell script. This makes it possible
+to work with the ReST API directly without using one of the client API&#8217;s.</p>
+<p>The following cURL command-line options will be used:</p>
+<div class="highlight-python"><pre>-X METHOD .... specify the HTTP method to request (HEAD, GET, etc)
+-D - ......... dump HTTP response headers to stdout
+-H HEADER .... specify an HTTP header in the request</pre>
+</div>
+<div class="section" id="id44">
+<h4>Authentication<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h4>
+<p>In order to use the ReST API, you will first need to obtain a
+authorization token, which will need to be passed in for each request
+using the <tt class="docutils literal"><span class="pre">X-Auth-Token</span></tt> header. The following example demonstrates
+how to use cURL to obtain the authorization token and the URL of the
+storage system.</p>
+<p>cURL command:</p>
+<div class="highlight-python"><pre>curl -D - \
+  -H "X-Auth-Key: a86850deb2742ec3cb41518e26aa2d89" \
+  -H "X-Auth-User: jdoe" \
+  https://auth.api.rackspacecloud.com/v1.0</pre>
+</div>
+<p>cURL output:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Thu, 09 Jul 2009 15:31:39 GMT
+Server: Apache/2.2.3
+X-Storage-Url: https://storage.clouddrive.com/v1/CF_xer7_343
+X-CDN-Management-Url: https://cdn.clouddrive.com/v1/CF_xer7_343
+X-Auth-Token: fc81aaa6-98a1-9ab0-94ba-aba9a89aa9ae
+Content-Length: 0
+Connection: close
+Content-Type: application/octet-stream</pre>
+</div>
+<p>The storage URL, CDN management URL, and authentication token,
+are returned in the headers of the response. You can now use cURL to
+perform <tt class="docutils literal"><span class="pre">HEAD</span></tt>, <tt class="docutils literal"><span class="pre">GET</span></tt>, <tt class="docutils literal"><span class="pre">DELETE</span></tt>, <tt class="docutils literal"><span class="pre">POST</span></tt> and <tt class="docutils literal"><span class="pre">PUT</span></tt> requests on
+the storage and CDN services.</p>
+</div>
+<div class="section" id="how-much-storage-space-are-you-using">
+<h4>How much storage space are you using?<a class="headerlink" href="#how-much-storage-space-are-you-using" title="Permalink to this headline">¶</a></h4>
+<p>A <tt class="docutils literal"><span class="pre">HEAD</span></tt> request can be sent to the storage service to determine how
+much data you have stored in the system and the number of Containers.
+Use the <tt class="docutils literal"><span class="pre">-X</span></tt> switch to specify the correct HTTP method and the <tt class="docutils literal"><span class="pre">-D</span></tt>
+to dump the HTTP response headers to terminal output (stdout).</p>
+<p>cURL command:</p>
+<div class="highlight-python"><pre>curl –X HEAD -D - \
+  -H "X-Auth-Token: fc81aaa6-98a1-9ab0-94ba-aba9a89aa9ae" \
+  https://storage.clouddrive.com/v1/CF_xer7_343</pre>
+</div>
+<p>cURL output:</p>
+<div class="highlight-python"><pre>HTTP/1.1 204 No Content
+Date: Thu, 09 Jul 2009 15:38:14 GMT
+Server: Apache
+X-Account-Container-Count: 22
+X-Account-Bytes-Used: 9891628380
+Content-Type: text/plain</pre>
+</div>
+<p>The HTTP request must include a header to specify the authentication
+token.  The HTTP headers in the response indicate the number of Containers
+in this storage account and the total bytes stored for the entire account.</p>
+</div>
+<div class="section" id="creating-a-storage-container">
+<h4>Creating a storage Container<a class="headerlink" href="#creating-a-storage-container" title="Permalink to this headline">¶</a></h4>
+<p>The first thing you&#8217;ll need to do before uploading any data to Cloud
+Files is create a storage Container.  You do this with a <tt class="docutils literal"><span class="pre">PUT</span></tt> request
+and cURL can be used for that too.</p>
+<p>cURL command:</p>
+<div class="highlight-python"><pre>curl –X PUT -D - \
+  -H "X-Auth-Token: fc81aaa6-98a1-9ab0-94ba-aba9a89aa9ae" \
+  https://storage.clouddrive.com/v1/CF_xer7_343/images</pre>
+</div>
+<p>cURL output:</p>
+<div class="highlight-python"><pre>HTTP/1.1 201 Created
+Date: Thu, 09 Jul 2009 17:03:36 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: text/plain</pre>
+</div>
+<p>As you can see, an HTTP status code of 201 (Created) was returned which
+indicates that the Container was successfully created.</p>
+</div>
+<div class="section" id="uploading-a-storage-object">
+<h4>Uploading a storage Object<a class="headerlink" href="#uploading-a-storage-object" title="Permalink to this headline">¶</a></h4>
+<p>Now you can upload a local file.  For this example, let&#8217;s upload a
+screenshot image.  The <tt class="docutils literal"><span class="pre">-T</span></tt> switch specifies the full path to the
+local file to upload.  Please note that if you intend to distribute
+this Object via the CDN you MUST make sure that the Object&#8217;s
+<tt class="docutils literal"><span class="pre">Content-Type</span></tt> is set correctly.  This is the mechanism by which
+a user&#8217;s web browser knows how to display the file or launch a
+helper application to view the file.</p>
+<p>cURL command:</p>
+<div class="highlight-python"><pre>curl -X PUT -T screenies/wow1.jpg -D - \
+     -H "ETag: 805120ec285a7ed28f74024422fe3594" \
+     -H "Content-Type: image/jpeg" \
+     -H "X-Auth-Token: fc81aaa6-98a1-9ab0-94ba-aba9a89aa9ae" \
+     -H "X-Object-Meta-Screenie: Mel visits Outland" \
+     https://storage.clouddrive.com/v1/CF_xer7_343/images/wow1.jpg</pre>
+</div>
+<p>cURL output:</p>
+<div class="highlight-python"><pre>HTTP/1.1 201 Created
+Date: Thu, 09 Jul 2009 17:03:36 GMT
+Server: Apache
+Content-Length: 0
+Etag: 805120ec285a7ed28f74024422fe3594
+Content-Type: text/plain</pre>
+</div>
+</div>
+<div class="section" id="cdn-enabling-the-container">
+<h4>CDN-enabling the Container<a class="headerlink" href="#cdn-enabling-the-container" title="Permalink to this headline">¶</a></h4>
+<p>Now you&#8217;d like to share this file out with your friends.  Since the data
+in Cloud Files is all private, you can share your screenshot via the CDN.
+To CDN-enable a Container, issue a <tt class="docutils literal"><span class="pre">PUT</span></tt> request against the CDN
+management service.  The default TTL is 24 hours and supports a minimum
+of 1 hour (3600 seconds) and a maximum of 3 days (259200 seconds).  Note
+the target URL specifies the CDN system.</p>
+<p>cURL command:</p>
+<div class="highlight-python"><pre>curl -X PUT -D - \
+     -H "X-Auth-Token: fc81aaa6-98a1-9ab0-94ba-aba9a89aa9ae" \
+     -H "X-CDN-Enabled: True" \
+     -H "X-TTL: 259200" \
+     https://cdn.clouddrive.com/v1/CF_xer7_343/images</pre>
+</div>
+<p>cURL output:</p>
+<div class="highlight-python"><pre>HTTP/1.1 202 Accepted
+Date: Thu, 06 Aug 2009 01:34:13 GMT
+Server: Apache
+X-CDN-URI: http://c0010171.cdn.cloudfiles.rackspacecloud.com
+Content-Length: 0
+Connection: close
+Content-Type: text/plain; charset=UTF-8</pre>
+</div>
+<p>When the Container is CDN-enabled, the service returns its public URI
+in the <tt class="docutils literal"><span class="pre">X-CDN-URI</span></tt> header of the response.  Now you can combine this
+URI along with the Object name to access the file via the CDN.</p>
+<p>You can verify the CDN&#8217;s cache settings that you specified with your TTL
+value by sending a <tt class="docutils literal"><span class="pre">GET</span></tt> request to the Object&#8217;s CDN URL and viewing the
+response headers.  The TTL value you specify translates to the <tt class="docutils literal"><span class="pre">Expires</span></tt>
+and <tt class="docutils literal"><span class="pre">Cache-Control</span></tt> headers of the CDN&#8217;s cached Object.</p>
+<p>The cURL command below issues a <tt class="docutils literal"><span class="pre">GET</span></tt> request which downloads the
+entire file but writes it to <tt class="docutils literal"><span class="pre">/dev/null</span></tt>, a data sink that won&#8217;t
+actually save the content to your local drive (only valid on UNIX-like
+systems).</p>
+<p>cURL command:</p>
+<div class="highlight-python"><pre>curl -s -D - \
+http://c0010171.cdn.cloudfiles.rackspacecloud.com/wow1.jpg \
+-O /dev/null</pre>
+</div>
+<p>cURL output:</p>
+<div class="highlight-python"><pre>HTTP/1.1 200 OK
+Date: Thu, 06 Aug 2009 01:40:12 GMT
+Server: Apache
+Expires: Fri, 07 Aug 2009 01:40:12 GMT
+Last-Modified: Thu, 09 Jul 2009 17:14:46 GMT
+Cache-Control: max-age=86400, public
+ETag: b20237bff6828976d2eb348e1ca8adae
+Content-Length: 1255764
+Content-Type: image/jpeg
+Connection: keep-alive</pre>
+</div>
+</div>
+<div class="section" id="other-curl-commands">
+<h4>Other cURL commands<a class="headerlink" href="#other-curl-commands" title="Permalink to this headline">¶</a></h4>
+<p>As you can see, cURL is a great utility for interacting directly with
+Cloud Files.  Hopefully this is enough of a primer to get you started
+with issuing any of the ReST methods defined in this document with the
+cURL utility.  You can use cURL to send <tt class="docutils literal"><span class="pre">POST</span></tt> and <tt class="docutils literal"><span class="pre">DELETE</span></tt> requests
+too even though we haven&#8217;t provided specific examples.</p>
+<p>It should be noted that generally each time <tt class="docutils literal"><span class="pre">curl</span></tt> is invoked to
+perform an operation, a separate TCP/IP and SSL connection is created
+and thrown away.  The language API&#8217;s however are designed to re-use
+these connections between operations and therefore provide much better
+performance.  It is recommended that you use one of the supported
+language API&#8217;s in your production applications and limit <tt class="docutils literal"><span class="pre">curl</span></tt> to
+quick-and-easy testing/troubleshooting.</p>
+</div>
+</div>
+</div>
+<div class="section" id="glossary">
+<h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-api">API</dt>
+<dd>Application programming interface.</dd>
+<dt id="term-cdn">CDN</dt>
+<dd>Content Distribution Network.</dd>
+<dt id="term-etag">ETag</dt>
+<dd>An ETag is a HTTP header that defines an Object&#8217;s MD5 checksum.
+When a user uploads a new Object, if they included an ETag header
+it&#8217;s value will be compared to the computed MD5 checksum as it
+is written to the storage system.  If the two do not match an
+error response is returned.  In all cases, an ETag header is
+returned in the response to the user on a PUT, GET, or HEAD
+request of a storage Object.</dd>
+<dt id="term-http">HTTP</dt>
+<dd>Hypertext Transfer Protocol as defined in RFC 2616.</dd>
+<dt id="term-java">Java</dt>
+<dd>Java is an object oriented programming language.</dd>
+<dt id="term-limelight-networks">Limelight Networks</dt>
+<dd>Premier, world-class CDN provider.</dd>
+<dt id="term-md5">MD5</dt>
+<dd>Message-Digest algorithm 5 is a cryptographic hash function
+with a 128-bit hash value.</dd>
+<dt id="term-net">.NET</dt>
+<dd>The Microsoft® .NET Framework</dd>
+<dt id="term-php">PHP</dt>
+<dd>Hypertext Preprocessor is a computer scripting language, mainly
+used in web applications.</dd>
+<dt id="term-python">Python</dt>
+<dd>A high-level, object-oriented programming language.</dd>
+<dt id="term-rackspace">Rackspace</dt>
+<dd>Rackspace is a recognized leader in the managed hosting market.</dd>
+<dt id="term-rest">ReST</dt>
+<dd>A web service architecture which utilizes the HTTP protocol.</dd>
+<dt id="term-ruby">Ruby</dt>
+<dd>A high-level, object-oriented programming language.</dd>
+<dt id="term-uri">URI</dt>
+<dd>Uniform Resource Identifier.</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="">Cloud Files Developer Guide v1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Rackspace Hosting, Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.2.
+    </div>
+  </body>
+</html>

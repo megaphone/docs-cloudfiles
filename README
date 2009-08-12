@@ -1,0 +1,41 @@
+Cloud Files Documentation
+=========================
+
+There are two distinct documents in this repository.
+
+* Introduction - Introduce new users to Cloud Files
+* Developer Guide - Document the Cloud Files ReST interface
+
+Each Cloud Files doc resides in it's own sub-directory.  The docs
+are written in reStructuredText markup format.  Sphinx is used to
+convert the raw rst into HTML and PDF.
+
+    reST: http://docutils.sourceforge.net/rst.html
+  sphinx: http://sphinx.pocoo.org/
+
+Each project was created with 'sphinx-quickstart'.  The only
+non-defaults answers supplied to sphinx-quickstart were to specify the
+project's main doc name (rather than 'index') and to specify .txt
+extenstion instead of .rst.  The Sphinx conf.py files were also
+tweaked to remove the search/navigation features.
+
+In each project dir, run 'make <builder>' to generate the docs where
+'builder' is either 'html' or 'latex'.  The PDF format can be generated
+from the latex source.  On a Debian system, there are a slew of latex
+packages (including fonts) that need to be installed before the PDF
+can be generated.
+
+HTML example::
+
+    $ cd cf-devguide
+    $ make html
+    $ firefox _build/html/cf-devguide.html &
+
+PDF example::
+
+    $ cd cf-devguide
+    $ make latex
+    $ cd _build/latex
+    $ # edit _build/latex/Makefile and remove the "-makeindex" lines
+    $ make all-pdf
+
