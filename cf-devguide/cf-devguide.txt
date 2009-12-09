@@ -1,5 +1,5 @@
 =================================
- Cloud Files‚Ñ¢ Developer Guide
+ Cloud Filesô Developer Guide
 =================================
 
 .. toctree::
@@ -7,7 +7,7 @@
 
 Overview
 ========
-The Rackspace Cloud Files‚Ñ¢ is an affordable, redundant, scalable, and
+The Rackspace Cloud Filesô is an affordable, redundant, scalable, and
 dynamic storage service offering.  The core storage system is designed to
 provide a safe, secure, automatically re-sizing and network accessible way
 to store data.  You can store an unlimited quantity of files and each file
@@ -22,7 +22,7 @@ costs, or technical hurdles.
 
 Cloud Files allows users to store/retrieve files and CDN-enable content
 via a simple Web Service (ReST: Representational State Transfer)
-interface. There are also language-specific API‚Äôs that utilize the ReST
+interface. There are also language-specific APIís that utilize the ReST
 API but make it much easier for developers to integrate into their
 applications.
 
@@ -38,12 +38,12 @@ components of the Cloud Files system.
 
     Prerequisites: Familiarity with HTTP, RFC 2616
 
-Rackspace also provides company supported language-specific API‚Äôs in
+Rackspace also provides company supported language-specific APIís in
 several popular programming languages.  The current list of supported
-API‚Äôs is C#/.NET, Java, PHP, Python, and Ruby.  These API‚Äôs utilize the
+APIís is C#/.NET, Java, PHP, Python, and Ruby.  These APIís utilize the
 ReST API and are provided to help developers rapidly integrate Cloud Files
 support into their applications without needing to write at the ReST
-interface.  Each API includes its own documentation in its ‚Äúnative‚Äù
+interface.  Each API includes its own documentation in its ìnativeî
 format.  For example, the Java API includes JavaDocs and the C#/.NET API
 includes a CHM file.
 
@@ -61,7 +61,7 @@ content to Cloud Files.
 Concepts
 ========
 
-Cloud Files is not a ‚Äúfile system‚Äù in the traditional sense. You will not
+Cloud Files is not a ìfile systemî in the traditional sense. You will not
 be able to **map** or **mount** virtual disk drives like you can with
 other forms of storage such as a SAN or NAS. Since Cloud Files is a
 different way of thinking when it comes to storage so you should take a
@@ -82,7 +82,7 @@ Authentication
 
 The language and ReST API's below describe how to authenticate against the
 Authentication service to receive Cloud Files connection parameters and an
-‚Äúauthentication token‚Äù.  The token must be passed in for all subsequent
+ìauthentication tokenî.  The token must be passed in for all subsequent
 Container/Object operations.
 
 .. note::
@@ -104,36 +104,36 @@ Key or a session token.
 Containers
 ----------
 
-A Container is a ‚Äústorage compartment‚Äù for your data and provides a way
+A Container is a ìstorage compartmentî for your data and provides a way
 for you to organize your data. You can think of a Container as a folder
-in Windows¬Æ or a directory in UNIX¬Æ. The primary difference between a
-Container and these other ‚Äúfile system‚Äù concepts is that Containers cannot
+in WindowsÆ or a directory in UNIXÆ. The primary difference between a
+Container and these other ìfile systemî concepts is that Containers cannot
 be nested. You can, however, create an unlimited number of Containers
 within your account.  Data must be stored in a Container so you must have
 at least one Container defined in your account prior to uploading data.
 
 The only restrictions on Container names is that they cannot contain a
-forward slash, ‚Äú/‚Äù character must be less than 256 bytes in length.
+forward slash, ì/î character must be less than 256 bytes in length.
 Please note that the length restriction applies to the name after it has
-been URL encoded.  For example, a Container name of ‚ÄúCourse Docs‚Äù would be
-URL encoded as ‚ÄúCourse%20Docs‚Äù and therefore be 13 bytes in length rather
+been URL encoded.  For example, a Container name of ìCourse Docsî would be
+URL encoded as ìCourse%20Docsî and therefore be 13 bytes in length rather
 than the expected 11.
 
 Objects
 -------
 
-An ‚ÄúObject‚Äù is the basic storage entity and any optional metadata that
-represents the ‚Äúfiles‚Äù you store in the Cloud Files system. When you
+An ìObjectî is the basic storage entity and any optional metadata that
+represents the ìfilesî you store in the Cloud Files system. When you
 upload data to Cloud Files the data is stored as-is (no compression or
 encryption) and consists of a location (Container), the Object's name,
 and any metadata consisting of key/value pairs. For instance, you may
 chose to store a backup of your digital photos and organize them into
 albums.  For example, each Object could be tagged with metadata such as
-‚ÄúAlbum : Caribbean Cruise‚Äù or ‚ÄúAlbum : Aspen Ski Trip‚Äù.
+ìAlbum : Caribbean Cruiseî or ìAlbum : Aspen Ski Tripî.
 
 The only restriction on Object names is that they must be less than 1024
 bytes in length after URL encoding.  For example, an Object name of
-‚ÄúC++final(v2).txt‚Äù should be URL encoded as ‚ÄúC%2B%2Bfinal%28v2%29.txt‚Äù
+ìC++final(v2).txtî should be URL encoded as ìC%2B%2Bfinal%28v2%29.txtî
 and therefore be 24 bytes in length rather than the expected 16.
 
 The maximum allowable size for a storage Object is 5 gigabytes and the
@@ -159,7 +159,7 @@ CDN-enabled Containers
 
 To publish data that is to be served by Limelight Networks' Content
 Distribution Network (CDN), Containers which house the data must be
-‚ÄúCDN-enabled‚Äù.  When a Container is CDN-enabled any files will be
+ìCDN-enabledî.  When a Container is CDN-enabled any files will be
 publicly accessible and not require an authentication token for read
 access.  Uploading content into a CDN-enabled Container is a secure
 operation and will require a valid authentication token.
@@ -193,8 +193,8 @@ For example, you could CDN-enable a Container called *images* and be
 assigned the CDN URL, but you also need to create a Container called
 *images* in the storage service.
 
-For more details on the CDN operations refer to ‚ÄúContent Delivery Networks
-with Cloud Files‚Äù
+For more details on the CDN operations refer to ìContent Delivery Networks
+with Cloud Filesî
 
 Language-specific API's
 =======================
@@ -255,7 +255,7 @@ URL encoding/decoding).  The length restrictions should be checked
 against the URL encoded string.
 
 Each ReST request against the Cloud Files system requires the inclusion of
-a specific ‚Äúauthorization token‚Äù HTTP header defined as ``X-Auth-Token``.
+a specific ìauthorization tokenî HTTP header defined as ``X-Auth-Token``.
 Clients obtain this token, along with the Cloud Files URI's, by first
 using the Authentication service and supplying a valid Username and API
 Access Key.
@@ -274,7 +274,7 @@ Object.  A ``PUT`` request against the ``X-CDN-Management-Url`` is used
 to CDN-enable a Container.
 
 The language-specific API's mask this system separation from the
-programmer.  They simply create a Container and mark it ‚Äúpublic‚Äù and it
+programmer.  They simply create a Container and mark it ìpublicî and it
 handles calling out to the appropriate back-end services using the
 appropriate ReST API.
 
@@ -384,7 +384,7 @@ are supported with this request.
 * **format** - Specify either *json* or *xml* to return the respective
   serialized response.
 
-At this time, a ‚Äúprefix‚Äù query parameter is not supported at the Account
+At this time, a ìprefixî query parameter is not supported at the Account
 level.
 
 Request
@@ -481,7 +481,7 @@ The system will return a maximum of 10,000 Container names per request.
 To retrieve subsequent container names, another request must be made with
 a 'marker' parameter. The marker indicates where the last list left off
 and the system will return container names greater than this marker, up to
-10,000 again.  Note that the ‚Äòmarker‚Äô value should be URL encoded prior to
+10,000 again.  Note that the ëmarkerí value should be URL encoded prior to
 sending the HTTP request.
 
 If 10,000 is larger than desired, a 'limit' parameter may be given.
@@ -544,7 +544,7 @@ Request
 Determine the number of Containers within the account and the total bytes
 stored.  Since the storage system is designed to store large amounts of
 data, care should be taken when representing the total bytes response as
-an ‚Äúinteger‚Äù; when possible, convert it to a 64-bit unsigned integer if
+an ìintegerî; when possible, convert it to a 64-bit unsigned integer if
 your platform supports that primitive type.
 
 Sample request::
@@ -590,7 +590,7 @@ Request
 Determine the number of Objects and total stored bytes within the
 Container.  Since the storage system is designed to store large amounts
 of data, care should be taken when representing the total bytes response
-as an ‚Äúinteger‚Äù; when possible, convert it to a 64-bit unsigned integer
+as an ìintegerî; when possible, convert it to a 64-bit unsigned integer
 if your platform supports that primitive type.
 
 Sample request::
@@ -750,7 +750,7 @@ The system will return a maximum of 10,000 Object names per request. To
 retrieve subsequent Object names, another request must be made with a
 'marker' parameter. The marker indicates where the last list left off
 and the system will return Object names greater than this marker, up to
-10,000 again.  Note that the ‚Äòmarker‚Äô value should be URL encoded prior
+10,000 again.  Note that the ëmarkerí value should be URL encoded prior
 to sending the HTTP request.
 
 If 10,000 is larger than desired, a 'limit' parameter may be given.
@@ -805,20 +805,20 @@ Pseudo hierarchical folders/directories
 
 Users will be able to simulate a hierarchical structure in Cloud Files
 by following a few guidelines.  Object names must contain the forward
-slash character ‚Äò/‚Äô as a path element separator and also create
-‚Äúdirectory marker‚Äù Objects, then they will be able to traverse this nested
-structure with the new ‚Äúpath‚Äù query parameter.  This can best be
+slash character ë/í as a path element separator and also create
+ìdirectory markerî Objects, then they will be able to traverse this nested
+structure with the new ìpathî query parameter.  This can best be
 illustrated by example:
 
 .. note::
 
     For the purposes of this example, the Container where the Objects
-    reside is called ‚Äúbackups‚Äù.  All Objects in this example start with
-    a prefix of ‚Äúphotos‚Äù and should NOT be confused with the Container
+    reside is called ìbackupsî.  All Objects in this example start with
+    a prefix of ìphotosî and should NOT be confused with the Container
     name.  In the example, the full URI of the "me.jpg" file would be
     https://storage.clouddrive.com/v1/CF_xer7_343/backups/photos/me.jpg
 
-In the example, the following ‚Äúreal‚Äù Objects are uploaded to the storage
+In the example, the following ìrealî Objects are uploaded to the storage
 system with names representing their full filesystem path.::
 
     photos/animals/dogs/poodle.jpg
@@ -842,8 +842,8 @@ create these as zero or one byte files with a Content-Type of
     photos
 
 Now issuing a ``GET`` request against the Container name coupled with the
-‚Äúpath‚Äù query parameter of the directory to list can traverse these
-‚Äúdirectories‚Äù.  Only the request line and results are depicted below
+ìpathî query parameter of the directory to list can traverse these
+ìdirectoriesî.  Only the request line and results are depicted below
 excluding other request/response headers.::
 
     GET /v1/AccountString/backups?path=photos HTTP/1.1
@@ -863,7 +863,7 @@ To traverse down into the *animals* directory, specify that path.::
     photos/animals/dogs
     photos/animals/cats
 
-By combining this ‚Äúpath‚Äù query parameter with the ‚Äúformat‚Äù query
+By combining this ìpathî query parameter with the ìformatî query
 parameter, users will be able to easily distinguish between virtual
 folders/directories by Content-Type and build interfaces that allow
 traversal of the pseudo-nested structure.
@@ -877,7 +877,7 @@ Container.
 Request
 +++++++
 
-Containers are ‚Äústorage compartments‚Äù for your data.  The URL encoded
+Containers are ìstorage compartmentsî for your data.  The URL encoded
 name must be less than 256 bytes and cannot contain a forward slash
 '/' character.
 
@@ -1203,7 +1203,7 @@ CDN Services
 The following is a list of API's that can be used for CDN Account and
 container operations.  All of the ReST method described below must be
 issued against the CDN Management service as defined in the
-``X-CDN-Management‚ÄìUrl`` returned by a successful authentication.
+``X-CDN-ManagementñUrl`` returned by a successful authentication.
 
 CDN Account Operations
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -1218,30 +1218,30 @@ GET
 
 ``GET`` operations against the ``X-CDN-Management-Url`` for an account
 are performed to retrieve a list of existing CDN-enabled Containers.
-Like the storage system‚Äôs ``GET`` Container, the CDN management service
+Like the storage systemís ``GET`` Container, the CDN management service
 allows the following query parameters:
 
-* **limit** ‚Äî For an integer value N, limits the number of results to
+* **limit** ó For an integer value N, limits the number of results to
   at most N values. 
-* **marker** ‚Äî Given a string value X, return Object names greater in
+* **marker** ó Given a string value X, return Object names greater in
   value than the specified marker. 
-* **format** ‚Äî Specify either ‚Äújson‚Äù or ‚Äúxml‚Äù to return the respective
+* **format** ó Specify either ìjsonî or ìxmlî to return the respective
   serialized response.
-* **enabled_only** ‚Äì Set to ‚Äútrue‚Äù to return only the CDN-enabled
+* **enabled_only** ñ Set to ìtrueî to return only the CDN-enabled
   Containers.
 
 Like the storage system, it is possible to request the output in a
-serialized format in either JSON or XML with the ‚Äúformat‚Äù query
+serialized format in either JSON or XML with the ìformatî query
 parameter.
 
-Also like the storage system, using ‚Äúlimit‚Äù and ‚Äúmarker‚Äù provides a
+Also like the storage system, using ìlimitî and ìmarkerî provides a
 mechanism to iterate through the entire list of Containers.  Keep in
 mind that the value for marker will need to be URL encoded before
 issuing the request.
 
 There is also support for filtering the list to only return the list
 of Containers that are currently CDN-enabled.  Passing in a query
-parameter of ``?enabled_only=true`` will suppress any ‚Äúprivate‚Äù
+parameter of ``?enabled_only=true`` will suppress any ìprivateî
 Containers from appearing in the list.
 
 Request
@@ -1302,6 +1302,8 @@ Sample JSON response::
        "cdn_enabled":"true",
        "ttl":28800,
        "log_retention":"true",
+       "referrer_url":"",
+       "useragent_acl:"",
        "cdn_uri":"http://c0010171.cdn.cloudfiles.rackspacecloud.com/"},
     ]
 
@@ -1327,7 +1329,9 @@ Sample XML response::
           <ttl>86400</ttl>
           <log_retention>True</log_retention>
           <cdn_url>http://c0010171.cdn.cloudfiles.rackspacecloud.com/</cdn_url>
-      </container>
+          <referrer_acl></referrer_acl>
+          <useragent_acl></useragent_acl>
+     </container>
     </account>
 
 CDN Container Services
@@ -1339,9 +1343,9 @@ HTTP request methods and will resemble this format::
 
   METHOD /v1/<account>/<container> HTTP/1.1
 
-Containers tracked in the CDN management service are completely separate
+Containers tracked in the CDN management service are separate
 and distinct from the Containers defined in the storage service.  It
-is possibly for a Container to be CDN-enabled even if it doesn't exist
+is possible for a Container to be CDN-enabled even if it doesn't exist
 in the storage system.  Users may want the ability to pre-generate
 CDN URL's before actually uploading content and this separation gives
 them that ability.
@@ -1362,16 +1366,17 @@ the CDN attributes of the Container.
 Request
 +++++++
 
-If the Container is (or has ever been) CDN-enabled, the URI, TTL, and
-enabled-status are returned in the response headers.  Its CDN URI can
-be combined with any Object name within the Container to form the
-publicly accessible URL for that Object for distribution over Limelight
-Networks' system.  The TTL is how many seconds that Object will be
-cached in the CDN system before re-fetching the Object.  The
-enabled-status indicates if the Container is currently marked to allow
-public serving of Objects via CDN.  The log_retention setting
-specifies if the CDN access logs should be collected and stored in
-the Cloud Files storage system.
+If the Container is (or has ever been) CDN-enabled, the URI, TTL, 
+enabled-status, log retention status, reffrer acl and User-agent acl are
+returned in the response headers.  Its CDN URI can be combined with any Object
+name within the Container to form the publicly accessible URL for that Object 
+for distribution over Limelight Networks' system.  The TTL value is the number 
+of seconds that the Object will be cached in the CDN system before being refetched.  The enabled-status indicates if the Container is currently marked to allow
+public serving of Objects via CDN.  The log_retention setting specifies if the 
+CDN access logs should be collected and stored in the Cloud Files storage 
+system. The referrer-acl is a Perl Compatible Regular Expression (PCRE) that
+must match the referrer in order for the content to be served.  This is a usefulmechanism to prevent other content providers from hot-linking your CDN content. The user-agent-acl is a PCRE that must match the user agent (AKA the browser)
+that your users are using to access the CDN content.
 
 Sample request::
 
@@ -1395,12 +1400,14 @@ Sample response::
     X-CDN-URI: http://c0010171.cdn.cloudfiles.rackspacecloud.com/
     X-TTL: 86400
     X-Log-Retention: True
+    X-User-Agent-ACL: Mozilla
+    X-Referrer-ACL: .*.\rackspacecloud\.com
 
 PUT
 ###
 
 ``PUT`` operations against a Container are used to initially CDN-enable
-that Container and set its attributes.
+the Container and set its attributes.
 
 Request
 +++++++
@@ -1408,13 +1415,12 @@ Request
 When a Container is CDN-enabled, any Objects stored in that Container
 will be publicly accessible over Limelight Networks' CDN by combining
 the Container's CDN URI with the Object name.  Any Objects accessed will
-be cached within the CDN for TTL seconds (the default is one day).  On
-the next access after the TTL expiration, the CDN will re-fetch the
-Object and cache it again for another TTL seconds.  The minimum TTL that
-can be set is 1 hour and 3 days (3600-259200 seconds).
+be cached in the CDN for TTL(value) number of seconds (the default is one day or 86400 seconds).  On the next access after the TTL expiration, the CDN will 
+re-fetch the Object and cache it again for another TTL(value) seconds.  The minimum TTL that can be set is 1 hour and maximum TTL is 3 days (3600-259200 
+seconds).
 
 To specify the TTL, include an HTTP header of ``X-TTL: integer_seconds``
-Setting the TTL translates to setting the HTTP ``Expires`` and
+Setting the TTL is the same as setting the HTTP ``Expires`` and
 ``Cache-Control`` headers for the cached Object.
 
 Sample request::
@@ -1424,6 +1430,8 @@ Sample request::
     X-Auth-Token: eaaafd18-0fed-4b3a-81b4-663c99ec1cbb
     X-TTL: 2592000
     X-Log-Retention: True
+    X-User-Agent-ACL: Mozilla
+    X-Referrer-ACL: .*.\rackspacecloud\.com
 
 Response
 ++++++++
@@ -1452,7 +1460,7 @@ CDN attributes.
 Request
 +++++++
 
-The ``POST`` operation can be used to set a new TTL cache expiration or
+The ``POST`` operation can be used to set a new TTL cache expiration value or
 to enable/disable public sharing over the CDN.  Keep in mind that if
 you have content currently cached in the CDN, setting your Container
 back to private will NOT purge the CDN cache; you will have to wait for
@@ -1492,8 +1500,8 @@ interacting with the ReST interfaces.
 Using cURL
 ----------
 
-cURL is a command-line tool available on most UNIX¬Æ-like environments and
-Mac OS X¬Æ and can even be downloaded for Windows¬Æ.  For more information
+cURL is a command-line tool available on most UNIXÆ-like environments and
+Mac OS XÆ and can even be downloaded for WindowsÆ.  For more information
 on cURL, visit http://curl.haxx.se/. 
 
 cURL allows you to transmit and receive HTTP requests and responses from
@@ -1502,7 +1510,7 @@ to work with the ReST API directly without using one of the client API's.
 
 The following cURL command-line options will be used::
 
-  -X METHOD .... specify the HTTP method to request (HEAD, GET, etc)
+  -X METHOD .... specify the HTTP method to request (HEAD, GET, etc)::
   -D - ......... dump HTTP response headers to stdout
   -H HEADER .... specify an HTTP header in the request
 
@@ -1549,7 +1557,7 @@ to dump the HTTP response headers to terminal output (stdout).
 
 cURL command::
 
-    curl ‚ÄìX HEAD -D - \
+    curl ñX HEAD -D - \
       -H "X-Auth-Token: fc81aaa6-98a1-9ab0-94ba-aba9a89aa9ae" \
       https://storage.clouddrive.com/v1/CF_xer7_343
 
@@ -1575,7 +1583,7 @@ and cURL can be used for that too.
 
 cURL command::
 
-    curl ‚ÄìX PUT -D - \
+    curl ñX PUT -D - \
       -H "X-Auth-Token: fc81aaa6-98a1-9ab0-94ba-aba9a89aa9ae" \
       https://storage.clouddrive.com/v1/CF_xer7_343/images
 
@@ -1732,7 +1740,7 @@ Glossary
         with a 128-bit hash value.
 
     .NET
-        The Microsoft¬Æ .NET Framework
+        The MicrosoftÆ .NET Framework
 
     PHP
         Hypertext Preprocessor is a computer scripting language, mainly
